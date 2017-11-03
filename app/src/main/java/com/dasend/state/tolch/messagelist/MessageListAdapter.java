@@ -18,6 +18,7 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.android.mms.transaction.Transaction;
 import com.android.mms.transaction.TransactionBundle;
@@ -141,7 +142,7 @@ public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHol
             holder.mAvatarView.setContactName(AvatarView.ME);
             holder.mAvatarView.assignContactUri(ContactsContract.Profile.CONTENT_URI);
             if (mPrefs.getBoolean(SettingsFragment.HIDE_AVATAR_SENT, true)) {
-                //((RelativeLayout.LayoutParams) holder.mMessageBlock.getLayoutParams()).setMargins(0, 0, 0, 0);
+                ((RelativeLayout.LayoutParams) holder.mMessageBlock.getLayoutParams()).setMargins(0, 0, 0, 0);
                 holder.mAvatarView.setVisibility(View.GONE);
             }
         } else {
@@ -153,7 +154,7 @@ public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHol
 
             // set up avatar
             if (mPrefs.getBoolean(SettingsFragment.HIDE_AVATAR_RECEIVED, false)) {
-                //((RelativeLayout.LayoutParams) holder.mMessageBlock.getLayoutParams()).setMargins(0, 0, 0, 0);
+                ((RelativeLayout.LayoutParams) holder.mMessageBlock.getLayoutParams()).setMargins(0, 0, 0, 0);
                 holder.mAvatarView.setVisibility(View.GONE);
             }
         }
@@ -319,10 +320,10 @@ public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHol
     }
 
     private int getBubbleBackgroundResource(boolean showAvatar, boolean isMine) {
-        if (showAvatar && isMine) return ThemeManager.getSentBubbleRes();
-        else if (showAvatar && !isMine) return ThemeManager.getReceivedBubbleRes();
-        else if (!showAvatar && isMine) return ThemeManager.getSentBubbleAltRes();
-        else if (!showAvatar && !isMine) return ThemeManager.getReceivedBubbleAltRes();
+        if (showAvatar && isMine) return R.drawable.message_item_right_new;
+        else if (showAvatar && !isMine) return R.drawable.message_item_left_new;
+        else if (!showAvatar && isMine) return R.drawable.message_item_right_new;
+        else if (!showAvatar && !isMine) return R.drawable.message_item_left_new;
         else return -1;
     }
 
@@ -365,8 +366,14 @@ public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHol
             body = msgSizeText;
         }
 
-        holder.mBodyTextView.getBackground().setColorFilter(ThemeManager.getTolchColor(joinedMessageItem.mTolch.getFone()), PorterDuff.Mode.SRC_ATOP);
+        int fone = joinedMessageItem.mTolch.getFone();
+        holder.mBodyTextView.getBackground().setColorFilter(ThemeManager.getTolchColor(fone), PorterDuff.Mode.SRC_ATOP);
 
+        if(fone != 0 ) { //neutral
+            holder.mBodyTextView.setTextColor(ThemeManager.getTolchColor(fone));
+        } else {
+            holder.mBodyTextView.setTextColor(mContext.getResources().getColor(R.color.theme_light_text_secondary));
+        }
 
         // Cleanse the subject
         String subject = MessageUtils.cleanseMmsSubject(mContext, joinedMessageItem.mSubject, body);

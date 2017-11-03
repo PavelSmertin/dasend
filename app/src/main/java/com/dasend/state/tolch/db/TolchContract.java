@@ -18,6 +18,8 @@ public final class TolchContract {
     private static final String INTEGER_TYPE_DEFAULT = " DEFAULT ''";
     private static final String REAL_TYPE = " REAL";
     private static final String REAL_TYPE_DEFAULT = " DEFAULT 0";
+    private static final String TEXT_TYPE = " TEXT";
+    private static final String TEXT_TYPE_DEFAULT = " DEFAULT ''";
     private static final String COMMA_SEP = ", ";
 
     public static final String SQL_CREATE_MESSAGES =
@@ -37,7 +39,8 @@ public final class TolchContract {
             "CREATE TABLE " + TolchThreads.TABLE_NAME + " (" +
                     TolchThreads._ID + " INTEGER PRIMARY KEY," +
                     TolchThreads.COLUMN_NAME_THREAD_ID + INTEGER_TYPE + INTEGER_TYPE_DEFAULT + COMMA_SEP +
-                    TolchThreads.COLUMN_NAME_AVG_FONE + REAL_TYPE + REAL_TYPE_DEFAULT +
+                    TolchThreads.COLUMN_NAME_AVG_FONE + REAL_TYPE + REAL_TYPE_DEFAULT + COMMA_SEP +
+                    TolchThreads.COLUMN_NAME_DATE + TEXT_TYPE + TEXT_TYPE_DEFAULT +
                     " )";
 
     public static final String SQL_DELETE_THREADS =
@@ -107,11 +110,13 @@ public final class TolchContract {
 
         public static final String COLUMN_NAME_THREAD_ID    = "thread_id";
         public static final String COLUMN_NAME_AVG_FONE     = "avg_fone";
+        public static final String COLUMN_NAME_DATE     = "date";
 
         public static final String[] DEFAULT_PROJECTION = new String[] {
                 TolchContract.TolchThreads._ID,
                 TolchContract.TolchThreads.COLUMN_NAME_THREAD_ID,
-                TolchContract.TolchThreads.COLUMN_NAME_AVG_FONE
+                TolchContract.TolchThreads.COLUMN_NAME_AVG_FONE,
+                TolchContract.TolchThreads.COLUMN_NAME_DATE
         };
 
     }

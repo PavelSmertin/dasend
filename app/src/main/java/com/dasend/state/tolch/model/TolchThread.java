@@ -15,11 +15,14 @@ public class TolchThread {
     private long     mNeutral;
     private float    mFone;
 
+
+    private String   mDate;
+
     @SuppressLint("NewApi")
     public TolchThread(Cursor cursor, ThreadColumns.ColumnsMap columnsMap) {
         mThreadId           = cursor.getLong(columnsMap.mColumnThreadId);
         mMessagesCount      = cursor.getInt(columnsMap.mColumnMessagesCount);
-
+        mDate               = cursor.getString(columnsMap.mColumnDate);
     }
 
 
@@ -30,6 +33,10 @@ public class TolchThread {
 
     public int getMessagesCount() {
         return mMessagesCount;
+    }
+
+    public String getDate() {
+        return mDate;
     }
 
     public float getFone() {

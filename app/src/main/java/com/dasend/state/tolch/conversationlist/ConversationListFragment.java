@@ -28,6 +28,8 @@ import android.widget.ImageView;
 import com.dasend.state.R;
 import com.dasend.state.tolch.db.TolchContract;
 import com.dasend.state.tolch.db.TolchThreadColumns;
+import com.dasend.state.tolch.messagelist.MessageListActivity;
+import com.dasend.state.tolch.views.SimpleDividerItemDecoration;
 import com.melnykov.fab.FloatingActionButton;
 import com.moez.QKSMS.QKSMSApp;
 import com.moez.QKSMS.common.BlockedConversationHelper;
@@ -43,7 +45,6 @@ import com.moez.QKSMS.ui.base.QKFragment;
 import com.moez.QKSMS.ui.base.RecyclerCursorAdapter;
 import com.moez.QKSMS.ui.compose.ComposeActivity;
 import com.moez.QKSMS.ui.dialog.conversationdetails.ConversationDetailsDialog;
-import com.moez.QKSMS.ui.messagelist.MessageListActivity;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
 
 import java.util.Observable;
@@ -57,6 +58,8 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
         RecyclerCursorAdapter.ItemClickListener<Conversation>, RecyclerCursorAdapter.MultiSelectListener, Observer {
 
     public static final String TAG = "ConversationListFragment";
+
+    private static final int VERTICAL_ITEM_SPACE = 6;
 
     @BindView(R.id.empty_state)          View mEmptyState;
     @BindView(R.id.empty_state_icon)     ImageView mEmptyStateIcon;
@@ -114,6 +117,10 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
+        SimpleDividerItemDecoration decoration = new SimpleDividerItemDecoration(getActivity(), VERTICAL_ITEM_SPACE);
+        mRecyclerView.addItemDecoration(decoration);
+
 
         mFab.setColorNormal(ThemeManager.getColor());
         mFab.setColorPressed(ColorUtils.lighten(ThemeManager.getColor()));
@@ -310,13 +317,13 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
                 Conversation.ALL_THREADS_PROJECTION,
                 BlockedConversationHelper.getCursorSelection(mPrefs, mShowBlocked),
                 BlockedConversationHelper.getBlockedConversationArray(mPrefs),
-                "_id ASC"
+                "date DESC"
         );
     }
 
 
     private CursorLoader getTolchLoader() {
-        return new CursorLoader(mContext, TolchContract.TolchThreads.CONTENT_URI, TolchContract.TolchThreads.DEFAULT_PROJECTION, null, null, "thread_id ASC");
+        return new CursorLoader(mContext, TolchContract.TolchThreads.CONTENT_URI, TolchContract.TolchThreads.DEFAULT_PROJECTION, null, null, "date DESC");
     }
 
     @Override
@@ -382,11 +389,11 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
                 CursorJoiner.Result result = joiner.next();
                 if(result == CursorJoiner.Result.LEFT) {
                     MatrixCursor.RowBuilder row = cursor.newRow();
-                    concateRows(row, columnsTolchMap);
+                    concateLeftRows(row);
                 }
                 if(result == CursorJoiner.Result.BOTH) {
                     MatrixCursor.RowBuilder row = cursor.newRow();
-                    concateRows(row, columnsTolchMap);
+                    concateBothRows(row, columnsTolchMap);
                 }
             }
 
@@ -396,9 +403,7 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
         return null;
     }
 
-    private void concateRows(MatrixCursor.RowBuilder row, TolchThreadColumns.ColumnsMap columnsTolchMap) {
-
-
+    private void concateLeftRows(MatrixCursor.RowBuilder row) {
         row.add(cursorThreads.getLong(Conversation.ID));
         row.add(cursorThreads.getLong(Conversation.DATE));
         row.add(cursorThreads.getInt(Conversation.MESSAGE_COUNT));
@@ -408,13 +413,14 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
         row.add(cursorThreads.getInt(Conversation.READ));
         row.add(cursorThreads.getInt(Conversation.ERROR));
         row.add(cursorThreads.getInt(Conversation.HAS_ATTACHMENT));
+    }
 
+    private void concateBothRows(MatrixCursor.RowBuilder row, TolchThreadColumns.ColumnsMap columnsTolchMap) {
+
+        concateLeftRows(row);
 
         // Tolch
         row.add(cursorTolch.getFloat(columnsTolchMap.mColumnFone));
-
-
-
     }
 
 

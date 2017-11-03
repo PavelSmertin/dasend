@@ -66,15 +66,15 @@ public class ConversationListAdapter extends RecyclerCursorAdapter<ConversationL
         holder.root.setOnClickListener(holder);
         holder.root.setOnLongClickListener(holder);
 
-        if(conversation.getFone() > 0) {
-            holder.root.setBackgroundColor(ThemeManager.getTolchColor(1));
-            holder.root.getBackground().setColorFilter(ThemeManager.getTolchColor(1), PorterDuff.Mode.SRC_ATOP);
-            holder.root.getBackground().setAlpha((int)(255 * conversation.getFone()));
-        } else if(conversation.getFone() < 0) {
-            holder.root.setBackgroundColor(ThemeManager.getTolchColor(-1));
-            holder.root.getBackground().setColorFilter(ThemeManager.getTolchColor(-1), PorterDuff.Mode.SRC_ATOP);
-            holder.root.getBackground().setAlpha((int)(255 * -conversation.getFone()));
+        float alfa = 1;
+        int fone = 0;
+        if(Math.abs(conversation.getFone()) > 0.3f) {
+            alfa = Math.abs(conversation.getFone());
+            fone = (int) Math.signum(conversation.getFone());
         }
+
+        holder.root.getBackground().setColorFilter(ThemeManager.getTolchColor(fone), PorterDuff.Mode.SRC_ATOP);
+        holder.root.getBackground().setAlpha((int) (255 * alfa));
 
 
         holder.mutedView.setVisibility(new ConversationPrefsHelper(mContext, conversation.getThreadId())

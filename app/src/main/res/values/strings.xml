@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Dasend</string>
-    <string name="calculate">Analize</string>
+    <string name="initial_analize">Давайте подготовим Ваши сообщения</string>
 </resources>

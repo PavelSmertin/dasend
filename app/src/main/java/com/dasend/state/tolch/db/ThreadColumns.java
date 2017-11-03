@@ -9,13 +9,15 @@ public class ThreadColumns {
 
     public static final int COLUMN_ID                  = 1;
     public static final int COLUMN_MESSAGE_COUNT       = 2;
+    public static final int COLUMN_DATE                = 3;
 
     public static final int CACHE_SIZE         = 50;
 
     @SuppressLint("InlinedApi")
     public static final String[] PROJECTION = {
             Telephony.Threads._ID,
-            Telephony.Threads.MESSAGE_COUNT
+            Telephony.Threads.MESSAGE_COUNT,
+            Telephony.Threads.DATE
     };
 
 
@@ -25,10 +27,12 @@ public class ThreadColumns {
 
         public int mColumnThreadId;
         public int mColumnMessagesCount;
+        public int mColumnDate;
 
         public ColumnsMap() {
             mColumnThreadId           = COLUMN_ID;
             mColumnMessagesCount      = COLUMN_MESSAGE_COUNT;
+            mColumnDate               = COLUMN_DATE;
 
         }
 
@@ -42,6 +46,12 @@ public class ThreadColumns {
 
             try {
                 mColumnMessagesCount = cursor.getColumnIndexOrThrow(Telephony.Threads.MESSAGE_COUNT);
+            } catch (IllegalArgumentException e) {
+                if (DEBUG) Log.w(TAG, e.getMessage());
+            }
+
+            try {
+                mColumnDate = cursor.getColumnIndexOrThrow(Telephony.Threads.DATE);
             } catch (IllegalArgumentException e) {
                 if (DEBUG) Log.w(TAG, e.getMessage());
             }

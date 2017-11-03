@@ -45,6 +45,7 @@
                 android:text="@string/test"
                 android:textColor="@color/white_holo"
                 android:textSize="8sp"
+                android:visibility="gone"
                 />
 
 
@@ -63,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoLink="all"
-                    android:background="@drawable/message_received_2"
+                    android:background="@drawable/message_item_left_new"
                     android:gravity="center_vertical"
                     android:linksClickable="true"
                     app:type="primary" />

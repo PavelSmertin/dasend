@@ -262,7 +262,7 @@ public class ThemeManager {
         mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         mResources = context.getResources();
 
-        mColor = Integer.parseInt(mPrefs.getString(SettingsFragment.THEME, "" + DEFAULT_COLOR));
+        mColor = mResources.getColor(R.color.tolch_color);
         mActiveColor = mColor;
 
         initializeTheme(Theme.fromString(mPrefs.getString(SettingsFragment.BACKGROUND, "offwhite")));
@@ -300,7 +300,7 @@ public class ThemeManager {
 
         switch (theme) {
             case LIGHT:
-                mBackgroundColor = mResources.getColor(R.color.grey_light_mega_ultra);
+                mBackgroundColor = mResources.getColor(R.color.white_pure);
                 mTextOnBackgroundPrimary = mResources.getColor(R.color.theme_light_text_primary);
                 mtextOnBackgroundSecondary = mResources.getColor(R.color.theme_light_text_secondary);
                 mRippleBackgroundRes = R.drawable.ripple;
@@ -472,7 +472,7 @@ public class ThemeManager {
                 return mResources.getColor(R.color.grey_material);
 
             default:
-                return mResources.getColor(R.color.white_pure);
+                return mResources.getColor(R.color.grey_light_ultra);
         }
     }
 
@@ -677,8 +677,8 @@ public class ThemeManager {
         );
 
         int colorFrom = mActiveColor;
-        mColor = color;
-        mActiveColor = color;
+        //mColor = color;
+        mActiveColor = mColor;
 
         mPrefs.edit().putString(SettingsFragment.THEME, "" + color).apply();
 
@@ -725,7 +725,7 @@ public class ThemeManager {
 
     public static void setActiveColor(int color) {
         if (mActiveColor != color) {
-            mActiveColor = color;
+            mActiveColor = mColor;
             LiveViewManager.refreshViews(QKPreference.THEME);
         }
     }
@@ -792,11 +792,11 @@ public class ThemeManager {
     public static int getTolchColor(int tolch) {
 
         if(tolch == -1) {
-            return mResources.getColor(com.moez.QKSMS.R.color.red_light);
+            return mResources.getColor(R.color.red_light);
         }
 
         if(tolch == 1) {
-            return mResources.getColor(com.moez.QKSMS.R.color.green_light);
+            return mResources.getColor(R.color.green_light);
         }
 
         return mReceivedBubbleColored ? mActiveColor : getNeutralBubbleColor();

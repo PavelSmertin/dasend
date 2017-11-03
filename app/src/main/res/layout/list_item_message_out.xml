@@ -45,6 +45,7 @@
                 android:text="@string/test"
                 android:textColor="@color/white_holo"
                 android:textSize="8sp"
+                android:visibility="gone"
                 />
 
             <RelativeLayout
@@ -62,10 +63,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoLink="all"
-                    android:background="@drawable/message_sent_2"
+                    android:background="@drawable/message_item_right_new"
                     android:gravity="center_vertical"
                     android:linksClickable="true"
-                    android:text=" ты пидор ебаный я тебя буду драить со всех бортов и очко тебе порву своим твердым эрегированным стоячим мужсиким половым хуем"
                     app:type="primary" />
 
                 <FrameLayout

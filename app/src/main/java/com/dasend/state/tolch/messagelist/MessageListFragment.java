@@ -44,6 +44,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.dasend.state.MainActivity;
 import com.dasend.state.R;
 import com.dasend.state.tolch.JoinedMessageItem;
 import com.dasend.state.tolch.db.JoinedMessageColumns;
@@ -70,7 +71,6 @@ import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.interfaces.ActivityLauncher;
 import com.moez.QKSMS.transaction.NotificationManager;
 import com.moez.QKSMS.transaction.SmsHelper;
-import com.moez.QKSMS.ui.MainActivity;
 import com.moez.QKSMS.ui.SwipeBackLayout;
 import com.moez.QKSMS.ui.ThemeManager;
 import com.moez.QKSMS.ui.base.QKFragment;
@@ -711,11 +711,11 @@ public class MessageListFragment extends QKFragment implements ActivityLauncher,
                 CursorJoiner.Result result = joiner.next();
                 if(result == CursorJoiner.Result.LEFT) {
                     MatrixCursor.RowBuilder row = cursor.newRow();
-                    concateRows(row, columnsMessagesMap, columnsTolchMap);
+                    concateLeftRows(row, columnsMessagesMap);
                 }
                 if(result == CursorJoiner.Result.BOTH) {
                     MatrixCursor.RowBuilder row = cursor.newRow();
-                    concateRows(row, columnsMessagesMap, columnsTolchMap);
+                    concateBothRows(row, columnsMessagesMap, columnsTolchMap);
                 }
             }
 
@@ -725,8 +725,7 @@ public class MessageListFragment extends QKFragment implements ActivityLauncher,
         return null;
     }
 
-    private void concateRows(MatrixCursor.RowBuilder row, JoinedMessageColumns.ColumnsMap columnsMessagesMap, TolchMessageColumns.ColumnsMap columnsTolchMap) {
-
+    private void concateLeftRows(MatrixCursor.RowBuilder row, JoinedMessageColumns.ColumnsMap columnsMessagesMap) {
         row.add(cursorMessages.getString(columnsMessagesMap.mColumnMsgType));
         row.add(cursorMessages.getLong(columnsMessagesMap.mColumnMsgId));
         row.add(cursorMessages.getLong(columnsMessagesMap.mColumnThreadId));
@@ -748,13 +747,16 @@ public class MessageListFragment extends QKFragment implements ActivityLauncher,
         row.add(cursorMessages.getInt(columnsMessagesMap.mColumnMmsLocked));
         row.add(cursorMessages.getInt(columnsMessagesMap.mColumnMmsStatus));
         row.add(cursorMessages.getInt(columnsMessagesMap.mColumnMmsTextOnly));
+    }
+
+    private void concateBothRows(MatrixCursor.RowBuilder row, JoinedMessageColumns.ColumnsMap columnsMessagesMap, TolchMessageColumns.ColumnsMap columnsTolchMap) {
+
+        concateLeftRows(row, columnsMessagesMap);
 
         // Tolch
         row.add(cursorTolch.getFloat(columnsTolchMap.mColumnGood));
         row.add(cursorTolch.getFloat(columnsTolchMap.mColumnBad));
         row.add(cursorTolch.getFloat(columnsTolchMap.mColumnNeutral));
-
-
     }
 
     @Override

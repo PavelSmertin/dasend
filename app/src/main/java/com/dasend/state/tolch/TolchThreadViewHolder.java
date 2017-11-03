@@ -9,7 +9,6 @@ import com.moez.QKSMS.ui.base.ClickyViewHolder;
 import com.moez.QKSMS.ui.base.QKActivity;
 import com.moez.QKSMS.ui.mms.Presenter;
 
-
 public class TolchThreadViewHolder extends ClickyViewHolder<TolchThreadItem> {
     private final String TAG = "TolchViewHolder";
 

@@ -26,7 +26,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.moez.QKSMS.QKSMSApp;
+import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.DialogHelper;
 import com.moez.QKSMS.common.DonationManager;
@@ -313,6 +313,6 @@ public abstract class QKActivity extends AppCompatActivity {
     }
 
     public RequestQueue getRequestQueue() {
-        return ((QKSMSApp) getApplication()).getRequestQueue();
+        return ((QKSMSAppBase) getApplication()).getRequestQueue();
     }
 }
