@@ -32,6 +32,7 @@ android {
     }
     productFlavors {
     }
+
 }
 
 
@@ -53,6 +54,7 @@ String leakCanaryVersion = '1.4-beta2'
 dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.jakewharton:butterknife:8.8.1'
+
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'

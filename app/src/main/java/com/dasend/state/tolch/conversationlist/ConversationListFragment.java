@@ -367,6 +367,8 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
 
     private Cursor joinCursors() {
         if (cursorThreads != null && cursorTolch != null) {
+//            Log.d("DEBUG_TOLCH", "cursorThreads: " + cursorThreads.getCount());
+//            Log.d("DEBUG_TOLCH", "cursorTolch: " + cursorTolch.getCount());
             CursorJoiner joiner =  new CursorJoiner(
                     cursorThreads,
                     new String[]{BaseColumns._ID},
@@ -386,15 +388,38 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
             TolchThreadColumns.ColumnsMap columnsTolchMap = new TolchThreadColumns.ColumnsMap(cursorTolch);
 
             while (joiner.hasNext()) {
+
                 CursorJoiner.Result result = joiner.next();
                 if(result == CursorJoiner.Result.LEFT) {
                     MatrixCursor.RowBuilder row = cursor.newRow();
                     concateLeftRows(row);
+
+//                    Log.d("DEBUG_TOLCH", String.format("thread_id: %d, thread_date: %d, LEFT",
+//                            cursorThreads.getLong(Conversation.ID),
+//                            cursorThreads.getLong(Conversation.DATE),
+//                            result.name()
+//                    ));
                 }
                 if(result == CursorJoiner.Result.BOTH) {
                     MatrixCursor.RowBuilder row = cursor.newRow();
                     concateBothRows(row, columnsTolchMap);
+
+//                    Log.d("DEBUG_TOLCH", String.format("thread_id: %d, thread_date: %d, tolch_id: %d, tolch_date: %d, BOTH",
+//                            cursorThreads.getLong(Conversation.ID),
+//                            cursorThreads.getLong(Conversation.DATE),
+//                            cursorTolch.getLong(columnsTolchMap.mColumnThreadId),
+//                            cursorTolch.getLong(columnsTolchMap.mColumnDate),
+//                            result.name()
+//                    ));
                 }
+
+//                if(result == CursorJoiner.Result.RIGHT) {
+//                    Log.d("DEBUG_TOLCH", String.format("tolch_id: %d, tolch_date: %d, RIGHT",
+//                            cursorTolch.getLong(columnsTolchMap.mColumnThreadId),
+//                            cursorTolch.getLong(columnsTolchMap.mColumnDate),
+//                            result.name()
+//                    ));
+//                }
             }
 
             return cursor;

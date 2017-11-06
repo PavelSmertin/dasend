@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.BaseColumns;
 import android.provider.Telephony;
-import android.util.Log;
 
 import com.dasend.state.tolch.db.DBHelper;
 import com.dasend.state.tolch.db.MessageColumns;
@@ -33,7 +32,7 @@ public class TolchAnalizer {
         mContext = context;
     }
 
-    public boolean analize() {
+    public boolean analizeInitial() {
 
         DBHelper dbHelper = new DBHelper(mContext);
         dbHelper.onUpgrade(dbHelper.getReadableDatabase(), 0, 0);
@@ -47,31 +46,27 @@ public class TolchAnalizer {
                 return false;
             }
 
-            Log.d("PROGRESS_all", cursorAll.getCount()+" ");
-
-
-            cursor = mContext.getContentResolver().query(Telephony.Threads.CONTENT_URI.buildUpon().appendQueryParameter("simple", "true").build(), ThreadColumns.PROJECTION, null, null, null);
+            cursor = mContext.getContentResolver().query(
+                    Telephony.Threads.CONTENT_URI.buildUpon().appendQueryParameter("simple", "true").build(),
+                    ThreadColumns.PROJECTION,
+                    null,
+                    null,
+                    null
+            );
 
             if(cursor == null) {
                 return false;
             }
 
-            Log.d("PROGRESS_threads", cursor.getCount()+" ");
 
 
             mTotal = cursorAll.getCount();
             mCurrent = 0;
 
-            cursor.getCount();
             while (cursor.moveToNext()) {
 
-
-
                 ThreadColumns.ColumnsMap columnsMap = new ThreadColumns.ColumnsMap(cursor);
-                TolchThread thread = new TolchThread(cursor, columnsMap);
-
-                Log.d("PROGRESS_thread", thread.getThreadId()+" "+cursor.getCount());
-
+                TolchThread thread = new TolchThread(cursor);
 
                 thread = prepareThread(thread);
 
@@ -87,6 +82,7 @@ public class TolchAnalizer {
             }
 
         } catch (SQLiteException e) {
+            // TODO report error
             e.printStackTrace();
         } finally {
             if (cursor != null) {
@@ -99,17 +95,99 @@ public class TolchAnalizer {
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
+    public void analizeThread(long threadId) {
+
+        Cursor cursorThread = null;
+        Cursor cursorTolch = null;
+
+        try {
+
+            // Подгружаем существующий трэд, чтобы обновить дату расчета
+            cursorThread = mContext.getContentResolver().query(
+                    Telephony.Threads.CONTENT_URI.buildUpon()
+                            .appendQueryParameter("simple", "true")
+                            .build(),
+                    ThreadColumns.PROJECTION,
+                    Telephony.Threads._ID + " = " + Long.toString(threadId),
+                    null,
+                    null
+            );
+
+            assert cursorThread != null;
+            cursorThread.moveToNext();
+
+            TolchThread thread = new TolchThread(cursorThread);
+
+            // Подгружаем существующий расчет для существующего трэда
+            cursorTolch = mContext.getContentResolver().query(
+                    Uri.withAppendedPath(TolchContract.TolchThreads.CONTENT_ID_URI_BASE, Long.toString(threadId)),
+                    TolchContract.TolchThreads.DEFAULT_PROJECTION,
+                    null,
+                    null,
+                    null
+            );
+
+            if(cursorTolch == null) {
+                createTolchThread(thread);
+                return;
+            }
+
+            updateTolchThread(thread);
+
+
+        } catch (SQLiteException e) {
+            // TODO report error
+            e.printStackTrace();
+        } finally {
+            if (cursorThread != null) {
+                cursorThread.close();
+            }
+            if (cursorTolch != null) {
+                cursorTolch.close();
+            }
+        }
+
+    }
+
+    private void updateTolchThread(TolchThread thread) {
+        thread = prepareThread(thread);
+
+        ContentValues values = new ContentValues();
+        values.put(TolchContract.TolchThreads.COLUMN_NAME_AVG_FONE, thread.getFone());
+        values.put(TolchContract.TolchThreads.COLUMN_NAME_DATE, thread.getDate());
+
+        mContext.getContentResolver().update(
+                TolchContract.TolchThreads.CONTENT_URI,
+                values,
+                TolchContract.TolchThreads.COLUMN_NAME_THREAD_ID + " = " + Long.toString(thread.getThreadId()),
+                null
+        );
+    }
+
+    private void createTolchThread(TolchThread thread) {
+        thread = prepareThread(thread);
+
+        ContentValues values = new ContentValues();
+        values.put(TolchContract.TolchThreads.COLUMN_NAME_THREAD_ID, thread.getThreadId());
+        values.put(TolchContract.TolchThreads.COLUMN_NAME_AVG_FONE, thread.getFone());
+        values.put(TolchContract.TolchThreads.COLUMN_NAME_DATE, thread.getDate());
+        mContext.getContentResolver().insert(TolchContract.TolchThreads.CONTENT_URI, values);
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private TolchThread prepareThread(TolchThread thread) {
         Cursor cursor = null;
         try {
             //cursor = mContext.getContentResolver().query(Telephony.Sms.CONTENT_URI, MessageColumns.PROJECTION, null, null, null);
-            cursor = mContext.getContentResolver().query(Uri.withAppendedPath(Telephony.Sms.Conversations.CONTENT_URI, String.valueOf(thread.getThreadId())), MessageColumns.PROJECTION, null, null, null);
+            cursor = mContext.getContentResolver().query(
+                    Uri.withAppendedPath(
+                            Telephony.Sms.Conversations.CONTENT_URI,
+                            String.valueOf(thread.getThreadId())
+                    ), MessageColumns.PROJECTION, null, null, null);
 
             if(cursor == null) {
                 return thread;
             }
-
-            Log.d("PROGRESS_thread", thread.getThreadId()+" count: "+cursor.getCount());
 
             while (cursor.moveToNext()) {
                 MessageColumns.ColumnsMap columnsMap = new MessageColumns.ColumnsMap(cursor);
@@ -117,8 +195,8 @@ public class TolchAnalizer {
 
                 // Create a new map of values, where column names are the keys
                 ContentValues values = new ContentValues();
-                values.put(TolchContract.TolchMessages.COLUMN_NAME_THREAD_ID, message.getThreadId());
                 values.put(TolchContract.TolchMessages.COLUMN_NAME_MESSAGE_ID, message.getMessageId());
+                values.put(TolchContract.TolchMessages.COLUMN_NAME_THREAD_ID, message.getThreadId());
                 values.put(TolchContract.TolchMessages.COLUMN_NAME_BAD, message.getTolch().getBad());
                 values.put(TolchContract.TolchMessages.COLUMN_NAME_GOOD, message.getTolch().getGood());
                 values.put(TolchContract.TolchMessages.COLUMN_NAME_NEUTRAL, message.getTolch().getNeutral());
@@ -129,13 +207,13 @@ public class TolchAnalizer {
                 thread.increment(message.getTolch());
 
                 int progress = (int)(100 * ((float)(mCurrent++)/((float)mTotal)));
-                Log.d("PROGRESS", progress+" "+mCurrent);
 
                 subject.onNext(progress);
 
             }
 
         } catch (SQLiteException e) {
+            // TODO report error
             e.printStackTrace();
         } finally {
             if (cursor != null) {

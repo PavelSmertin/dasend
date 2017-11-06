@@ -54,7 +54,7 @@ public class TolchProvider extends ContentProvider {
                 count = db.delete(TolchContract.TolchMessages.TABLE_NAME, where, whereArgs);
                 break;
             case MESSAGE_ID:
-                finalWhere = TolchContract.TolchMessages._ID + " = " + uri.getPathSegments().get(TolchContract.TolchMessages.MESSAGES_ID_PATH_POSITION);
+                finalWhere = TolchContract.TolchMessages.COLUMN_NAME_MESSAGE_ID + " = " + uri.getPathSegments().get(TolchContract.TolchMessages.MESSAGES_ID_PATH_POSITION);
                 if (where != null) {
                     finalWhere = finalWhere + " AND " + where;
                 }
@@ -64,7 +64,7 @@ public class TolchProvider extends ContentProvider {
                 count = db.delete(TolchContract.TolchThreads.TABLE_NAME, where, whereArgs);
                 break;
             case THREAD_ID:
-                finalWhere = TolchContract.TolchThreads._ID + " = " + uri.getPathSegments().get(TolchContract.TolchThreads.THREADS_ID_PATH_POSITION);
+                finalWhere = TolchContract.TolchThreads.COLUMN_NAME_THREAD_ID + " = " + uri.getPathSegments().get(TolchContract.TolchThreads.THREADS_ID_PATH_POSITION);
                 if (where != null) {
                     finalWhere = finalWhere + " AND " + where;
                 }
@@ -168,7 +168,7 @@ public class TolchProvider extends ContentProvider {
             case THREAD_ID:
                 qb.setTables(TolchContract.TolchThreads.TABLE_NAME);
                 qb.setProjectionMap(THREADS_PROJECTION_MAP);
-                qb.appendWhere(TolchContract.TolchThreads._ID + "=" + uri.getPathSegments().get(TolchContract.TolchThreads.THREADS_ID_PATH_POSITION));
+                qb.appendWhere(TolchContract.TolchThreads.COLUMN_NAME_THREAD_ID + "=" + uri.getPathSegments().get(TolchContract.TolchThreads.THREADS_ID_PATH_POSITION));
                 orderBy = TolchContract.TolchThreads.DEFAULT_SORT_ORDER;
                 break;
             default:
@@ -196,7 +196,7 @@ public class TolchProvider extends ContentProvider {
                 break;
             case MESSAGE_ID:
                 id = uri.getPathSegments().get(TolchContract.TolchMessages.MESSAGES_ID_PATH_POSITION);
-                finalWhere = TolchContract.TolchMessages._ID + " = " + id;
+                finalWhere = TolchContract.TolchMessages.COLUMN_NAME_MESSAGE_ID + " = " + id;
                 if (where != null) {
                     finalWhere = finalWhere + " AND " + where;
                 }
@@ -207,7 +207,7 @@ public class TolchProvider extends ContentProvider {
                 break;
             case THREAD_ID:
                 id = uri.getPathSegments().get(TolchContract.TolchThreads.THREADS_ID_PATH_POSITION);
-                finalWhere = TolchContract.TolchThreads._ID + " = " + id;
+                finalWhere = TolchContract.TolchThreads.COLUMN_NAME_THREAD_ID + " = " + id;
                 if (where != null) {
                     finalWhere = finalWhere + " AND " + where;
                 }

@@ -8,11 +8,10 @@ public class TolchMessageColumns {
 
 
     private static final int COLUMN_ID           = 1;
-    private static final int COLUMN_MESSAGE_ID   = 2;
-    private static final int COLUMN_THREAD_ID    = 3;
-    private static final int COLUMN_GOOD         = 4;
-    private static final int COLUMN_BAD          = 5;
-    private static final int COLUMN_NEUTRAL      = 6;
+    private static final int COLUMN_THREAD_ID    = 2;
+    private static final int COLUMN_GOOD         = 3;
+    private static final int COLUMN_BAD          = 4;
+    private static final int COLUMN_NEUTRAL      = 5;
 
 
     public static final int CACHE_SIZE         = 50;
@@ -33,7 +32,6 @@ public class TolchMessageColumns {
 
         public ColumnsMap() {
             mColumnId           = COLUMN_ID;
-            mColumnMsgId        = COLUMN_MESSAGE_ID;
             mColumnThreadId     = COLUMN_THREAD_ID;
             mColumnGood         = COLUMN_GOOD;
             mColumnBad          = COLUMN_BAD;
@@ -47,13 +45,7 @@ public class TolchMessageColumns {
             // Ignore all 'not found' exceptions since the custom columns
             // may be just a subset of the default columns.
             try {
-                mColumnId = cursor.getColumnIndexOrThrow(TolchContract.TolchMessages._ID);
-            } catch (IllegalArgumentException e) {
-                if (DEBUG) Log.w(TAG, e.getMessage());
-            }
-
-            try {
-                mColumnMsgId = cursor.getColumnIndexOrThrow(TolchContract.TolchMessages.COLUMN_NAME_MESSAGE_ID);
+                mColumnId = cursor.getColumnIndexOrThrow(TolchContract.TolchMessages.COLUMN_NAME_MESSAGE_ID);
             } catch (IllegalArgumentException e) {
                 if (DEBUG) Log.w(TAG, e.getMessage());
             }

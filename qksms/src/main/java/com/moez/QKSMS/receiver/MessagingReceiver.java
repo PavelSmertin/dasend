@@ -134,4 +134,9 @@ public class MessagingReceiver extends BroadcastReceiver {
             wakeLock.release();
         }
     }
+
+
+    public Uri getUri() {
+        return mUri;
+    }
 }

@@ -649,12 +649,29 @@ public class MessageListFragment extends QKFragment implements ActivityLauncher,
 
 
     private CursorLoader getMessagesLoader() {
-        return new CursorLoader(mContext, Uri.withAppendedPath(Message.MMS_SMS_CONTENT_PROVIDER, String.valueOf(mThreadId)), MessageColumns.PROJECTION, null, null, "_id ASC");
+        return new CursorLoader(
+                mContext,
+                Uri.withAppendedPath(Message.MMS_SMS_CONTENT_PROVIDER, String.valueOf(mThreadId)),
+                MessageColumns.PROJECTION,
+                null,
+                null,
+                "_id ASC"
+        );
     }
 
 
     private CursorLoader getTolchLoader() {
-        return new CursorLoader(mContext, Uri.withAppendedPath(TolchContract.TolchMessages.Thread.CONTENT_ID_URI_BASE, String.valueOf(mThreadId)), TolchContract.TolchMessages.DEFAULT_PROJECTION, null, null, "message_id ASC");
+        return new CursorLoader(
+                mContext,
+                Uri.withAppendedPath(
+                    TolchContract.TolchMessages.Thread.CONTENT_ID_URI_BASE,
+                    String.valueOf(mThreadId)
+                ),
+                TolchContract.TolchMessages.DEFAULT_PROJECTION,
+                null,
+                null,
+                "message_id ASC"
+        );
     }
 
     @Override

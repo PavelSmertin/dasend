@@ -10,7 +10,7 @@ public class MessageColumns {
 
     public static final int COLUMN_ID                  = 1;
     public static final int COLUMN_THREAD_ID           = 2;
-    public static final int COLUMN_SMS_BODY            = 4;
+    public static final int COLUMN_SMS_BODY            = 3;
 
 
     public static final int CACHE_SIZE         = 50;

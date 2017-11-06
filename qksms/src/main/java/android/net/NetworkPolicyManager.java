@@ -17,6 +17,7 @@
 
 package android.net;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -76,6 +77,7 @@ public class NetworkPolicyManager {
         mService = service;
     }
 
+    @SuppressLint("ServiceCast")
     public static NetworkPolicyManager from(Context context) {
         return (NetworkPolicyManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }

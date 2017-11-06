@@ -24,9 +24,8 @@ public final class TolchContract {
 
     public static final String SQL_CREATE_MESSAGES =
             "CREATE TABLE " + TolchMessages.TABLE_NAME + " (" +
-                    TolchMessages._ID + " INTEGER PRIMARY KEY," +
+                    TolchMessages.COLUMN_NAME_MESSAGE_ID + " INTEGER PRIMARY KEY," +
                     TolchMessages.COLUMN_NAME_THREAD_ID + INTEGER_TYPE + INTEGER_TYPE_DEFAULT + COMMA_SEP +
-                    TolchMessages.COLUMN_NAME_MESSAGE_ID + INTEGER_TYPE + INTEGER_TYPE_DEFAULT + COMMA_SEP +
                     TolchMessages.COLUMN_NAME_GOOD + REAL_TYPE + REAL_TYPE_DEFAULT + COMMA_SEP +
                     TolchMessages.COLUMN_NAME_BAD + REAL_TYPE + REAL_TYPE_DEFAULT + COMMA_SEP +
                     TolchMessages.COLUMN_NAME_NEUTRAL + REAL_TYPE + REAL_TYPE_DEFAULT +
@@ -37,10 +36,9 @@ public final class TolchContract {
 
     public static final String SQL_CREATE_THREADS =
             "CREATE TABLE " + TolchThreads.TABLE_NAME + " (" +
-                    TolchThreads._ID + " INTEGER PRIMARY KEY," +
-                    TolchThreads.COLUMN_NAME_THREAD_ID + INTEGER_TYPE + INTEGER_TYPE_DEFAULT + COMMA_SEP +
+                    TolchThreads.COLUMN_NAME_THREAD_ID + " INTEGER PRIMARY KEY," +
                     TolchThreads.COLUMN_NAME_AVG_FONE + REAL_TYPE + REAL_TYPE_DEFAULT + COMMA_SEP +
-                    TolchThreads.COLUMN_NAME_DATE + TEXT_TYPE + TEXT_TYPE_DEFAULT +
+                    TolchThreads.COLUMN_NAME_DATE + INTEGER_TYPE + INTEGER_TYPE_DEFAULT +
                     " )";
 
     public static final String SQL_DELETE_THREADS =
@@ -75,7 +73,6 @@ public final class TolchContract {
         public static final String COLUMN_NAME_NEUTRAL      = "neutral";
 
         public static final String[] DEFAULT_PROJECTION = new String[] {
-                TolchContract.TolchMessages._ID,
                 TolchContract.TolchMessages.COLUMN_NAME_THREAD_ID,
                 TolchContract.TolchMessages.COLUMN_NAME_MESSAGE_ID,
                 TolchContract.TolchMessages.COLUMN_NAME_GOOD,
@@ -113,7 +110,6 @@ public final class TolchContract {
         public static final String COLUMN_NAME_DATE     = "date";
 
         public static final String[] DEFAULT_PROJECTION = new String[] {
-                TolchContract.TolchThreads._ID,
                 TolchContract.TolchThreads.COLUMN_NAME_THREAD_ID,
                 TolchContract.TolchThreads.COLUMN_NAME_AVG_FONE,
                 TolchContract.TolchThreads.COLUMN_NAME_DATE
