@@ -8,27 +8,27 @@ import android.util.Log;
 
 public class JoinedMessageColumns {
 
-    public static final int COLUMN_MSG_TYPE            = 0;
+    private static final int COLUMN_MSG_TYPE            = 0;
     public static final int COLUMN_ID                  = 1;
-    public static final int COLUMN_THREAD_ID           = 2;
-    public static final int COLUMN_SMS_ADDRESS         = 3;
-    public static final int COLUMN_SMS_BODY            = 4;
-    public static final int COLUMN_SMS_DATE            = 5;
-    public static final int COLUMN_SMS_DATE_SENT       = 6;
-    public static final int COLUMN_SMS_TYPE            = 7;
-    public static final int COLUMN_SMS_STATUS          = 8;
-    public static final int COLUMN_SMS_LOCKED          = 9;
-    public static final int COLUMN_SMS_ERROR_CODE      = 10;
-    public static final int COLUMN_MMS_SUBJECT         = 11;
-    public static final int COLUMN_MMS_SUBJECT_CHARSET = 12;
-    public static final int COLUMN_MMS_MESSAGE_TYPE    = 13;
-    public static final int COLUMN_MMS_MESSAGE_BOX     = 14;
-    public static final int COLUMN_MMS_DELIVERY_REPORT = 15;
-    public static final int COLUMN_MMS_READ_REPORT     = 16;
-    public static final int COLUMN_MMS_ERROR_TYPE      = 17;
-    public static final int COLUMN_MMS_LOCKED          = 18;
-    public static final int COLUMN_MMS_STATUS          = 19;
-    public static final int COLUMN_MMS_TEXT_ONLY       = 20;
+    private static final int COLUMN_THREAD_ID           = 2;
+    private static final int COLUMN_SMS_ADDRESS         = 3;
+    private static final int COLUMN_SMS_BODY            = 4;
+    private static final int COLUMN_SMS_DATE            = 5;
+    private static final int COLUMN_SMS_DATE_SENT       = 6;
+    private static final int COLUMN_SMS_TYPE            = 7;
+    private static final int COLUMN_SMS_STATUS          = 8;
+    private static final int COLUMN_SMS_LOCKED          = 9;
+    private static final int COLUMN_SMS_ERROR_CODE      = 10;
+    private static final int COLUMN_MMS_SUBJECT         = 11;
+    private static final int COLUMN_MMS_SUBJECT_CHARSET = 12;
+    private static final int COLUMN_MMS_MESSAGE_TYPE    = 13;
+    private static final int COLUMN_MMS_MESSAGE_BOX     = 14;
+    private static final int COLUMN_MMS_DELIVERY_REPORT = 15;
+    private static final int COLUMN_MMS_READ_REPORT     = 16;
+    private static final int COLUMN_MMS_ERROR_TYPE      = 17;
+    private static final int COLUMN_MMS_LOCKED          = 18;
+    private static final int COLUMN_MMS_STATUS          = 19;
+    private static final int COLUMN_MMS_TEXT_ONLY       = 20;
 
     // tolch
     private static final int COLUMN_GOOD               = 21;

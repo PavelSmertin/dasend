@@ -7,9 +7,9 @@ import android.util.Log;
 
 public class ThreadColumns {
 
-    public static final int COLUMN_ID                  = 1;
-    public static final int COLUMN_MESSAGE_COUNT       = 2;
-    public static final int COLUMN_DATE                = 3;
+    private static final int COLUMN_THREAD_ID           = 1;
+    private static final int COLUMN_MESSAGE_COUNT       = 2;
+    private static final int COLUMN_DATE                = 3;
 
     public static final int CACHE_SIZE         = 50;
 
@@ -22,7 +22,7 @@ public class ThreadColumns {
 
 
     public static class ColumnsMap {
-        private final String TAG = "ColumnsMap";
+        private final String TAG = "ThreadColumns.ColumnsMap";
         private final boolean DEBUG = false;
 
         public int mColumnThreadId;
@@ -30,10 +30,9 @@ public class ThreadColumns {
         public int mColumnDate;
 
         public ColumnsMap() {
-            mColumnThreadId           = COLUMN_ID;
+            mColumnThreadId           = COLUMN_THREAD_ID;
             mColumnMessagesCount      = COLUMN_MESSAGE_COUNT;
             mColumnDate               = COLUMN_DATE;
-
         }
 
         @SuppressLint("InlinedApi")

@@ -40,32 +40,32 @@ public class TolchAnalizer {
         Cursor cursor = null;
         Cursor cursorAll = null;
         try {
-            cursorAll = mContext.getContentResolver().query(Telephony.Sms.CONTENT_URI, new String[] {BaseColumns._ID}, null, null, null);
 
-            if(cursorAll == null) {
-                return false;
-            }
-
+            // get threads
             cursor = mContext.getContentResolver().query(
                     Telephony.Threads.CONTENT_URI.buildUpon().appendQueryParameter("simple", "true").build(),
                     ThreadColumns.PROJECTION,
                     null,
                     null,
-                    null
+                    "DATE ASC"
             );
 
             if(cursor == null) {
                 return false;
             }
 
+            // get sms total count
+            cursorAll = mContext.getContentResolver().query(Telephony.Sms.CONTENT_URI, new String[] {BaseColumns._ID}, null, null, null);
 
+            if(cursorAll == null) {
+                return false;
+            }
 
             mTotal = cursorAll.getCount();
             mCurrent = 0;
 
             while (cursor.moveToNext()) {
 
-                ThreadColumns.ColumnsMap columnsMap = new ThreadColumns.ColumnsMap(cursor);
                 TolchThread thread = new TolchThread(cursor);
 
                 thread = prepareThread(thread);
