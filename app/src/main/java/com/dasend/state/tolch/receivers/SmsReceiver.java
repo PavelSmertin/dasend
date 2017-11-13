@@ -20,7 +20,8 @@ public class SmsReceiver extends MessagingReceiver {
             cursor = context.getContentResolver().query(getUri(), MessageColumns.PROJECTION, null, null, null);
             cursor.moveToNext();
             MessageColumns.ColumnsMap columnsMap = new MessageColumns.ColumnsMap(cursor);
-            analizer.analizeThread(cursor.getLong(columnsMap.mColumnThreadId));
+            analizer.syncThreadById(cursor.getLong(columnsMap.mColumnThreadId));
+
         }  catch (SQLiteException e) {
             // TODO report error
             e.printStackTrace();

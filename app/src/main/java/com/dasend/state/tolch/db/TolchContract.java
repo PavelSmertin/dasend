@@ -15,11 +15,11 @@ public final class TolchContract {
 
 
     private static final String INTEGER_TYPE = " INTEGER";
-    private static final String INTEGER_TYPE_DEFAULT = " DEFAULT ''";
+    private static final String INTEGER_TYPE_DEFAULT = " DEFAULT 0";
     private static final String REAL_TYPE = " REAL";
     private static final String REAL_TYPE_DEFAULT = " DEFAULT 0";
-    private static final String TEXT_TYPE = " TEXT";
-    private static final String TEXT_TYPE_DEFAULT = " DEFAULT ''";
+    private static final String NUMERIC_TYPE = " NUMERIC";
+    private static final String NUMERIC_TYPE_DEFAULT = " DEFAULT 0";
     private static final String COMMA_SEP = ", ";
 
     public static final String SQL_CREATE_MESSAGES =
@@ -37,8 +37,13 @@ public final class TolchContract {
     public static final String SQL_CREATE_THREADS =
             "CREATE TABLE " + TolchThreads.TABLE_NAME + " (" +
                     TolchThreads.COLUMN_NAME_THREAD_ID + " INTEGER PRIMARY KEY," +
-                    TolchThreads.COLUMN_NAME_AVG_FONE + REAL_TYPE + REAL_TYPE_DEFAULT + COMMA_SEP +
-                    TolchThreads.COLUMN_NAME_DATE + INTEGER_TYPE + INTEGER_TYPE_DEFAULT +
+                    TolchThreads.COLUMN_NAME_DATE + INTEGER_TYPE + INTEGER_TYPE_DEFAULT + COMMA_SEP +
+                    TolchThreads.COLUMN_NAME_READY + NUMERIC_TYPE + NUMERIC_TYPE_DEFAULT + COMMA_SEP +
+                    TolchThreads.COLUMN_NAME_BAD + INTEGER_TYPE + INTEGER_TYPE_DEFAULT + COMMA_SEP +
+                    TolchThreads.COLUMN_NAME_GOOD + INTEGER_TYPE + INTEGER_TYPE_DEFAULT + COMMA_SEP +
+                    TolchThreads.COLUMN_NAME_NEUTRAL + INTEGER_TYPE + INTEGER_TYPE_DEFAULT + COMMA_SEP +
+                    TolchThreads.COLUMN_NAME_AVG_FONE + REAL_TYPE + REAL_TYPE_DEFAULT +
+
                     " )";
 
     public static final String SQL_DELETE_THREADS =
@@ -106,13 +111,23 @@ public final class TolchContract {
         public static final int     THREADS_ID_PATH_POSITION = 1;
 
         public static final String COLUMN_NAME_THREAD_ID    = "thread_id";
+        public static final String COLUMN_NAME_DATE         = "date";
+        public static final String COLUMN_NAME_READY        = "ready";
+
+        public static final String COLUMN_NAME_BAD          = "bad";
+        public static final String COLUMN_NAME_GOOD         = "good";
+        public static final String COLUMN_NAME_NEUTRAL      = "neutral";
         public static final String COLUMN_NAME_AVG_FONE     = "avg_fone";
-        public static final String COLUMN_NAME_DATE     = "date";
+
 
         public static final String[] DEFAULT_PROJECTION = new String[] {
                 TolchContract.TolchThreads.COLUMN_NAME_THREAD_ID,
-                TolchContract.TolchThreads.COLUMN_NAME_AVG_FONE,
-                TolchContract.TolchThreads.COLUMN_NAME_DATE
+                TolchContract.TolchThreads.COLUMN_NAME_DATE,
+                TolchContract.TolchThreads.COLUMN_NAME_READY,
+                TolchContract.TolchThreads.COLUMN_NAME_BAD,
+                TolchContract.TolchThreads.COLUMN_NAME_GOOD,
+                TolchContract.TolchThreads.COLUMN_NAME_NEUTRAL,
+                TolchContract.TolchThreads.COLUMN_NAME_AVG_FONE
         };
 
     }

@@ -9,7 +9,6 @@ import com.moez.QKSMS.R;
 import com.moez.QKSMS.data.Conversation;
 import com.moez.QKSMS.model.ChangeModel;
 import com.moez.QKSMS.transaction.SmsHelper;
-import com.moez.QKSMS.ui.MainActivity;
 import com.moez.QKSMS.ui.base.QKActivity;
 import com.moez.QKSMS.ui.dialog.DefaultSmsHelper;
 import com.moez.QKSMS.ui.dialog.QKDialog;
@@ -54,7 +53,7 @@ public class DialogHelper {
 
     }
 
-    public static void showDeleteFailedMessagesDialog(final MainActivity context, final Set<Long> threadIds) {
+    public static void showDeleteFailedMessagesDialog(final QKActivity context, final Set<Long> threadIds) {
         new DefaultSmsHelper(context, R.string.not_default_delete).showIfNotDefault(null);
 
         Set<Long> threads = new HashSet<>(threadIds); // Make a copy so the list isn't reset when multi-select is disabled

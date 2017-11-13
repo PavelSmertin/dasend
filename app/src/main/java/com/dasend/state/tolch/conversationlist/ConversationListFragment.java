@@ -17,6 +17,7 @@ import android.provider.BaseColumns;
 import android.provider.Telephony;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.dasend.state.R;
+import com.dasend.state.tolch.TolchAnalizer;
 import com.dasend.state.tolch.db.TolchContract;
 import com.dasend.state.tolch.db.TolchThreadColumns;
 import com.dasend.state.tolch.messagelist.MessageListActivity;
@@ -39,7 +41,6 @@ import com.moez.QKSMS.common.utils.ColorUtils;
 import com.moez.QKSMS.data.Contact;
 import com.moez.QKSMS.data.ConversationLegacy;
 import com.moez.QKSMS.enums.QKPreference;
-import com.moez.QKSMS.ui.MainActivity;
 import com.moez.QKSMS.ui.ThemeManager;
 import com.moez.QKSMS.ui.base.QKFragment;
 import com.moez.QKSMS.ui.base.RecyclerCursorAdapter;
@@ -207,7 +208,7 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
                 return true;
 
             case R.id.menu_delete:
-                DialogHelper.showDeleteConversationsDialog((MainActivity) mContext, mAdapter.getSelectedItems().keySet());
+                DialogHelper.showDeleteConversationsDialog(mContext, mAdapter.getSelectedItems().keySet());
                 mAdapter.disableMultiSelectMode(true);
                 return true;
 
@@ -235,7 +236,7 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
                 return true;
 
             case R.id.menu_delete_failed:
-                DialogHelper.showDeleteFailedMessagesDialog((MainActivity) mContext, mAdapter.getSelectedItems().keySet());
+                DialogHelper.showDeleteFailedMessagesDialog(mContext, mAdapter.getSelectedItems().keySet());
                 mAdapter.disableMultiSelectMode(true);
                 return true;
 
@@ -317,7 +318,7 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
                 Conversation.ALL_THREADS_PROJECTION,
                 BlockedConversationHelper.getCursorSelection(mPrefs, mShowBlocked),
                 BlockedConversationHelper.getBlockedConversationArray(mPrefs),
-                "date DESC"
+                "DATE DESC"
         );
     }
 
@@ -367,23 +368,28 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
 
     private Cursor joinCursors() {
         if (cursorThreads != null && cursorTolch != null) {
-//            Log.d("DEBUG_TOLCH", "cursorThreads: " + cursorThreads.getCount());
-//            Log.d("DEBUG_TOLCH", "cursorTolch: " + cursorTolch.getCount());
+
+            Log.d("DEBUG_TOLCH", "cursorThreads: " + cursorThreads.getCount());
+            Log.d("DEBUG_TOLCH", "cursorTolch: " + cursorTolch.getCount());
+
+            if(cursorThreads.getCount() != cursorTolch.getCount()) {
+                TolchAnalizer analizer = new TolchAnalizer(getActivity());
+                analizer.syncThreads();
+                return null;
+            }
+
             CursorJoiner joiner =  new CursorJoiner(
                     cursorThreads,
                     new String[]{BaseColumns._ID},
                     cursorTolch,
                     new String[]{ TolchContract.TolchMessages.COLUMN_NAME_THREAD_ID });
 
-
             int joinedProjectionLength = Conversation.ALL_THREADS_PROJECTION.length + 1;
             String[] joinedProjection = new String[joinedProjectionLength];
             System.arraycopy(Conversation.ALL_THREADS_PROJECTION, 0, joinedProjection, 0, Conversation.ALL_THREADS_PROJECTION.length);
             joinedProjection[joinedProjection.length-1] = TolchContract.TolchThreads.COLUMN_NAME_AVG_FONE;
 
-
             MatrixCursor cursor = new MatrixCursor(joinedProjection);
-
 
             TolchThreadColumns.ColumnsMap columnsTolchMap = new TolchThreadColumns.ColumnsMap(cursorTolch);
 
@@ -391,35 +397,38 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
 
                 CursorJoiner.Result result = joiner.next();
                 if(result == CursorJoiner.Result.LEFT) {
-                    MatrixCursor.RowBuilder row = cursor.newRow();
-                    concateLeftRows(row);
-
-//                    Log.d("DEBUG_TOLCH", String.format("thread_id: %d, thread_date: %d, LEFT",
-//                            cursorThreads.getLong(Conversation.ID),
-//                            cursorThreads.getLong(Conversation.DATE),
-//                            result.name()
-//                    ));
+                    Log.d("DEBUG_TOLCH", String.format("thread_id: %d, thread_date: %d, LEFT",
+                            cursorThreads.getLong(Conversation.ID),
+                            cursorThreads.getLong(Conversation.DATE),
+                            result.name()
+                    ));
+                    TolchAnalizer analizer = new TolchAnalizer(getActivity());
+                    analizer.syncThreads();
+                    return null;
                 }
                 if(result == CursorJoiner.Result.BOTH) {
                     MatrixCursor.RowBuilder row = cursor.newRow();
                     concateBothRows(row, columnsTolchMap);
 
-//                    Log.d("DEBUG_TOLCH", String.format("thread_id: %d, thread_date: %d, tolch_id: %d, tolch_date: %d, BOTH",
-//                            cursorThreads.getLong(Conversation.ID),
-//                            cursorThreads.getLong(Conversation.DATE),
-//                            cursorTolch.getLong(columnsTolchMap.mColumnThreadId),
-//                            cursorTolch.getLong(columnsTolchMap.mColumnDate),
-//                            result.name()
-//                    ));
+                    Log.d("DEBUG_TOLCH", String.format("thread_id: %d, thread_date: %d, tolch_id: %d, tolch_date: %d, BOTH",
+                            cursorThreads.getLong(Conversation.ID),
+                            cursorThreads.getLong(Conversation.DATE),
+                            cursorTolch.getLong(columnsTolchMap.mColumnThreadId),
+                            cursorTolch.getLong(columnsTolchMap.mColumnDate),
+                            result.name()
+                    ));
                 }
 
-//                if(result == CursorJoiner.Result.RIGHT) {
-//                    Log.d("DEBUG_TOLCH", String.format("tolch_id: %d, tolch_date: %d, RIGHT",
-//                            cursorTolch.getLong(columnsTolchMap.mColumnThreadId),
-//                            cursorTolch.getLong(columnsTolchMap.mColumnDate),
-//                            result.name()
-//                    ));
-//                }
+                if(result == CursorJoiner.Result.RIGHT) {
+                    Log.d("DEBUG_TOLCH", String.format("tolch_id: %d, tolch_date: %d, RIGHT",
+                            cursorTolch.getLong(columnsTolchMap.mColumnThreadId),
+                            cursorTolch.getLong(columnsTolchMap.mColumnDate),
+                            result.name()
+                    ));
+                    TolchAnalizer analizer = new TolchAnalizer(getActivity());
+                    analizer.syncThreads();
+                    return null;
+                }
             }
 
             return cursor;

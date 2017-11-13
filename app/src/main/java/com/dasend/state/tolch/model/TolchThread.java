@@ -9,13 +9,12 @@ public class TolchThread {
 
     private long     mThreadId;
     private int      mMessagesCount;
+    private long     mDate;
+    private boolean  mReady;
 
     private long     mBad;
     private long     mGood;
     private float    mFone;
-
-
-    private long   mDate;
 
     @SuppressLint("NewApi")
     public TolchThread(Cursor cursor) {
@@ -25,6 +24,7 @@ public class TolchThread {
         mThreadId           = cursor.getLong(columnsMap.mColumnThreadId);
         mMessagesCount      = cursor.getInt(columnsMap.mColumnMessagesCount);
         mDate               = cursor.getLong(columnsMap.mColumnDate);
+
     }
 
 
@@ -38,6 +38,10 @@ public class TolchThread {
 
     public float getFone() {
         return mFone;
+    }
+
+    public boolean isReady() {
+        return mReady;
     }
 
     public void calculateFone() {
@@ -57,6 +61,9 @@ public class TolchThread {
             mGood++;
             return;
         }
+    }
 
+    public void setReady(boolean ready) {
+        mReady = ready;
     }
 }

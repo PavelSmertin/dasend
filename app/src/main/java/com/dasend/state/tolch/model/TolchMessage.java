@@ -14,7 +14,8 @@ public class TolchMessage {
     private Tolch    mTolch;
 
     @SuppressLint("NewApi")
-    public TolchMessage(Cursor cursor, MessageColumns.ColumnsMap columnsMap) {
+    public TolchMessage(Cursor cursor) {
+        MessageColumns.ColumnsMap columnsMap = new MessageColumns.ColumnsMap(cursor);
         mMessageId  = cursor.getLong(columnsMap.mColumnMsgId);
         mThreadId   = cursor.getLong(columnsMap.mColumnThreadId);
 

@@ -42,7 +42,7 @@ public class AnalizeActivity extends AppCompatActivity{
         Observable
                 .just(true)
                 .subscribeOn(Schedulers.computation())
-                .map(succ -> mAnalizer.analizeInitial())
+                .map(succ -> mAnalizer.syncInitial())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(success -> {
                     setAnalize(100);
